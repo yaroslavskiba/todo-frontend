@@ -1,15 +1,22 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import Tags from './tags';
+import Create from './create';
 
 const Main = () => {
+  const location = useLocation();
+
   return (
-    <main className="main">
-      <Routes>
-        <Route path="/" element={null} />
-        <Route path="/" element={null} />
-        <Route path="/" element={null} />
-      </Routes>
-    </main>
+    <>
+      {location.pathname !== '/create' && <Tags />}
+      <main className="container">
+        <Routes>
+          <Route path="/" element={null} />
+          <Route path="/create" element={<Create />} />
+          <Route path="*" element={null} />
+        </Routes>
+      </main>
+    </>
   );
 };
 

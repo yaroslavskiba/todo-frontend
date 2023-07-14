@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface Note {
   id: number;
   title: string;
-  content: string;
+  content: string[];
   tags: string[];
 }
 

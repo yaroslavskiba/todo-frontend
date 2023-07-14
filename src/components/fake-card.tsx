@@ -1,28 +1,21 @@
 import React from 'react';
-import { Badge, Card, Container, ListGroup } from 'react-bootstrap';
+import { Card, Placeholder } from 'react-bootstrap';
 
 const FakeCard = () => {
   return (
     <>
-      <Container>
-        <Card style={{ width: '18rem' }}>
-          <Card.Body>
-            <Card.Title>Список дел</Card.Title>
-            <Card.Text style={{ gap: '3px' }}>
-              <Badge bg="secondary">Теги Записки</Badge>
-            </Card.Text>
-          </Card.Body>
-          <ListGroup className="list-group-flush">
-            <ListGroup.Item>Создайте</ListGroup.Item>
-            <ListGroup.Item>новый</ListGroup.Item>
-            <ListGroup.Item>список</ListGroup.Item>
-          </ListGroup>
-          <Card.Body>
-            <Card.Link href="#">Редактировать</Card.Link>
-            <Card.Link href="#">Удалить</Card.Link>
-          </Card.Body>
-        </Card>
-      </Container>
+      <Card style={{ width: '18rem' }}>
+        <Card.Body>
+          <Placeholder as={Card.Title} animation="glow">
+            <Placeholder xs={6} />
+          </Placeholder>
+          <Placeholder as={Card.Text} animation="glow">
+            <Placeholder xs={7} /> <Placeholder xs={4} /> <Placeholder xs={4} /> <Placeholder xs={6} />
+            <Placeholder xs={8} />
+          </Placeholder>
+          <Placeholder.Button variant="secondary" xs={6} />
+        </Card.Body>
+      </Card>
     </>
   );
 };

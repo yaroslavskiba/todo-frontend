@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Badge, CloseButton } from 'react-bootstrap';
 import { addNote } from '../features/todo-slice';
 import { useAppDispatch } from '../app/hooks';
 import { useNavigate } from 'react-router-dom';
@@ -57,9 +57,10 @@ const Create = () => {
       title,
       content,
       tags,
+      checked: false,
     };
 
-    if ((tags.length && tags.every((s) => s !== '')) || (content.length && content.some((s) => s !== ''))) {
+    if (tags.length && tags.every((s) => s !== '') && content.length && content.some((s) => s !== '') && title.length) {
       dispatch(addNote(note));
       navigate('/');
     } else {
@@ -70,71 +71,84 @@ const Create = () => {
   return (
     <>
       <br />
+      <br />
       <h3>Создание заметки: </h3>
-      {disabled && <Alert variant="danger">Пожалуйста проверьте название заметки</Alert>}
-      <Form onSubmit={handleFormSubmit}>
-        <Form.Group controlId="noteTitle">
-          <Form.Label>Название заметки</Form.Label>
-          <Form.Control type="text" value={title} onChange={handleTitleChange} />
-        </Form.Group>
-        <br />
+      <br />
+      <div className="d-flex" style={{ gap: '1.5rem' }}>
+        <div style={{ flex: '1 1 50%' }}>
+          <div className="d-flex" style={{ gap: '10px', flexWrap: 'wrap' }}>
+            {tags &&
+              tags.map((tag, index) => (
+                <Form.Group controlId={`tag${index}`} key={index}>
+                  {/* <Form.Label>Тег {index + 1}</Form.Label> */}
+                  <div className="d-flex" style={{ gap: '5px' }}>
+                    <Badge bg="secondary">{tag}</Badge>
+                    <CloseButton onClick={() => handleRemoveTag(index)} />
+                  </div>
+                  <br />
+                </Form.Group>
+              ))}
+          </div>
 
-        {content &&
-          content.map((content, index) => (
-            <Form.Group controlId={`content${index}`} key={index}>
-              <Form.Label>TODO {index + 1}</Form.Label>
+          {disabled && <Alert variant="danger">Пожалуйста проверьте название заметки</Alert>}
+          <Form onSubmit={handleFormSubmit}>
+            <Form.Group controlId="noteTitle">
+              <Form.Label>Название заметки</Form.Label>
+              <Form.Control type="text" value={title} onChange={handleTitleChange} />
+            </Form.Group>
+            <br />
+
+            {disabled && <Alert variant="danger">Пожалуйста проверьте содержимое ваших TODO</Alert>}
+            <Form.Group controlId="contentInput">
+              <Form.Label>Добавить TODO</Form.Label>
               <div className="d-flex">
-                <Form.Control type="text" style={{ width: '25%' }} value={content} disabled />
-                <Button style={{ width: '10%' }} variant="danger" onClick={() => handleRemoveContent(index)}>
-                  Удалить
+                <Form.Control
+                  style={{ width: '60%' }}
+                  type="text"
+                  value={contentInput}
+                  onChange={handleContentInputChange}
+                />
+                <Button variant="secondary" onClick={handleAddContent}>
+                  Добавить TODO
                 </Button>
               </div>
-              <br />
             </Form.Group>
-          ))}
+            <br />
 
-        {disabled && <Alert variant="danger">Пожалуйста проверьте содержимое ваших TODO</Alert>}
-        <Form.Group style={{ width: '45%' }} controlId="contentInput">
-          <Form.Label>Добавить TODO</Form.Label>
-          <div className="d-flex">
-            <Form.Control type="text" value={contentInput} onChange={handleContentInputChange} />
-            <Button style={{ width: '65%' }} variant="secondary" onClick={handleAddContent}>
-              Добавить TODO
-            </Button>
-          </div>
-        </Form.Group>
-        <br />
-
-        {tags &&
-          tags.map((tag, index) => (
-            <Form.Group controlId={`tag${index}`} key={index}>
-              <Form.Label>Тег {index + 1}</Form.Label>
+            {disabled && <Alert variant="danger">Пожалуйста проверьте ваши теги</Alert>}
+            <Form.Group controlId="tagInput">
+              <Form.Label>Добавить тег</Form.Label>
               <div className="d-flex">
-                <Form.Control type="text" style={{ width: '25%' }} value={tag} disabled />
-                <Button style={{ width: '10%' }} variant="danger" onClick={() => handleRemoveTag(index)}>
-                  Удалить
+                <Form.Control style={{ width: '50%' }} type="text" value={tagInput} onChange={handleTagInputChange} />
+                <Button variant="secondary" onClick={handleAddTag}>
+                  Добавить тег
                 </Button>
               </div>
-              <br />
             </Form.Group>
-          ))}
 
-        {disabled && <Alert variant="danger">Пожалуйста проверьте ваши теги</Alert>}
-        <Form.Group style={{ width: '35%' }} controlId="tagInput">
-          <Form.Label>Добавить тег</Form.Label>
-          <div className="d-flex">
-            <Form.Control type="text" value={tagInput} onChange={handleTagInputChange} />
-            <Button style={{ width: '40%' }} variant="secondary" onClick={handleAddTag}>
-              Добавить тег
+            <br />
+
+            <Button variant="secondary" type="submit">
+              Сохранить заметку
             </Button>
-          </div>
-        </Form.Group>
-        <br />
-
-        <Button variant="secondary" type="submit">
-          Сохранить заметку
-        </Button>
-      </Form>
+          </Form>
+        </div>
+        <div style={{ flex: '1 1 50%' }}>
+          {content &&
+            content.map((content, index) => (
+              <Form.Group controlId={`content${index}`} key={index}>
+                <Form.Label>TODO {index + 1}</Form.Label>
+                <div className="d-flex">
+                  <Form.Control type="text" value={content} disabled />
+                  <Button variant="danger" onClick={() => handleRemoveContent(index)}>
+                    Удалить
+                  </Button>
+                </div>
+                <br />
+              </Form.Group>
+            ))}
+        </div>
+      </div>
     </>
   );
 };

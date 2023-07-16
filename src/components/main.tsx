@@ -4,6 +4,7 @@ import Tags from './tags';
 import Create from './create';
 import { useSelector } from 'react-redux';
 import { RootState } from '../app/store';
+import Wrapper from './wrapper';
 
 const Main = () => {
   const location = useLocation();
@@ -11,10 +12,10 @@ const Main = () => {
   console.log(all);
   return (
     <>
-      {location.pathname !== '/create' && <Tags />}
+      {location.pathname === '/' && <Tags />}
       <main className="container">
         <Routes>
-          <Route path="/" element={null} />
+          <Route path="/" element={<Wrapper />} />
           <Route path="/create" element={<Create />} />
           <Route path="*" element={null} />
         </Routes>

@@ -1,15 +1,19 @@
 import React from 'react';
 import { Col, Container, Dropdown, DropdownButton } from 'react-bootstrap';
-import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
-import { setFilterTag } from '../features/todo-slice';
+import { setFilterTag, clearFilter } from '../features/todo-slice';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
 
 const Tags = () => {
-  const tags = useSelector((state: RootState) => state.todoReducer.tags);
-  const dispatch = useDispatch();
+  const tags = useAppSelector((state: RootState) => state.todoReducer.tags);
+  const dispatch = useAppDispatch();
 
   const handleFilterTag = (tag: string) => {
     dispatch(setFilterTag(tag));
+  };
+
+  const handleClearFilter = () => {
+    dispatch(clearFilter());
   };
 
   return (
@@ -23,6 +27,7 @@ const Tags = () => {
                 {tag}
               </Dropdown.Item>
             ))}
+            <Dropdown.Item onClick={() => handleClearFilter()}>Все</Dropdown.Item>
           </DropdownButton>
         </Col>
       </Container>

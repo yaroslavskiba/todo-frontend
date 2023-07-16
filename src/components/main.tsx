@@ -2,14 +2,19 @@ import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import Tags from './tags';
 import Create from './create';
-import { useSelector } from 'react-redux';
-import { RootState } from '../app/store';
 import Wrapper from './wrapper';
+import EditNote from './edit';
+import { useAppSelector } from '../app/hooks';
 
 const Main = () => {
   const location = useLocation();
-  const all = useSelector((state: RootState) => state.todoReducer);
-  console.log(all);
+  const { id, title, content, tags } = useAppSelector(({ todoReducer }) => todoReducer.currentNote) ?? {
+    id: 0,
+    title: '',
+    content: [],
+    tags: [],
+  };
+
   return (
     <>
       {location.pathname === '/' && <Tags />}
@@ -17,6 +22,7 @@ const Main = () => {
         <Routes>
           <Route path="/" element={<Wrapper />} />
           <Route path="/create" element={<Create />} />
+          <Route path="/edit" element={<EditNote {...{ id, title, content, tags }} />} />
           <Route path="*" element={null} />
         </Routes>
       </main>

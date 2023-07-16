@@ -1,11 +1,20 @@
 import React from 'react';
 import { RootState } from '../app/store';
 import { Badge, Card, Form, InputGroup, ListGroup } from 'react-bootstrap';
-import { useAppSelector } from '../app/hooks';
+import { useAppDispatch, useAppSelector } from '../app/hooks';
+import { Note, editCurrentElement } from '../features/todo-slice';
+import { useNavigate } from 'react-router-dom';
 
 const Cards = () => {
   const notes = useAppSelector((state: RootState) => state.todoReducer.notes);
   const filteredNotes = useAppSelector((state: RootState) => state.todoReducer.filteredNotes);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleEdit = (note: Note) => {
+    dispatch(editCurrentElement(note));
+    navigate('/edit');
+  };
 
   return (
     <div className="d-flex" style={{ gap: '1.3rem', flexWrap: 'wrap' }}>
@@ -27,8 +36,8 @@ const Cards = () => {
                 {note.content.map((todo, index) => (
                   <ListGroup.Item key={`${todo}${index}`}>
                     <InputGroup className="mb-3">
-                      <InputGroup.Checkbox aria-label={todo} />
-                      <Form.Control aria-label={todo} value={todo} />
+                      <InputGroup.Checkbox aria-label={todo.contentInput} />
+                      <Form.Control aria-label={todo.contentInput} value={todo.contentInput} />
                     </InputGroup>
                   </ListGroup.Item>
                 ))}
@@ -36,7 +45,9 @@ const Cards = () => {
 
               <Card.Body>
                 <Card.Link href="#">Удалить</Card.Link>
-                <Card.Link href="#">Редактировать</Card.Link>
+                <Card.Link href="#" onClick={() => handleEdit(note)}>
+                  Редактировать
+                </Card.Link>
               </Card.Body>
             </Card>
           ))
@@ -57,8 +68,8 @@ const Cards = () => {
                 {note.content.map((todo, index) => (
                   <ListGroup.Item key={`${todo}${index}`}>
                     <InputGroup className="mb-3">
-                      <InputGroup.Checkbox aria-label={todo} />
-                      <Form.Control aria-label={todo} value={todo} />
+                      <InputGroup.Checkbox aria-label={todo.contentInput} />
+                      <Form.Control aria-label={todo.contentInput} value={todo.contentInput} />
                     </InputGroup>
                   </ListGroup.Item>
                 ))}
@@ -66,7 +77,9 @@ const Cards = () => {
 
               <Card.Body>
                 <Card.Link href="#">Удалить</Card.Link>
-                <Card.Link href="#">Редактировать</Card.Link>
+                <Card.Link href="#" onClick={() => handleEdit(note)}>
+                  Редактировать
+                </Card.Link>
               </Card.Body>
             </Card>
           ))}

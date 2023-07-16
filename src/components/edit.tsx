@@ -1,23 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Badge, CloseButton } from 'react-bootstrap';
-import { addNote } from '../features/todo-slice';
+import { updateNote } from '../features/todo-slice';
 import { useAppDispatch } from '../app/hooks';
 import { useNavigate } from 'react-router-dom';
 import Alert from 'react-bootstrap/Alert';
+import { Note } from '../features/todo-slice';
 
-const Create = () => {
-  const [title, setTitle] = useState<string>('');
-  const [tags, setTags] = useState<string[]>([]);
+const EditNote = ({ id, title, content, tags }: Note) => {
+  const [noteTitle, setNoteTitle] = useState<string>(title);
+  const [noteTags, setNoteTags] = useState<string[]>(tags);
   const [tagInput, setTagInput] = useState<string>('');
-  const [content, setContent] = useState<{ contentInput: string; checked: boolean }[]>([]);
+  const [noteContent, setNoteContent] = useState<{ contentInput: string; checked: boolean }[]>(content);
   const [contentInput, setContentInput] = useState<string>('');
   const [disabled, setDisabled] = useState<boolean>(false);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setNoteTitle(title);
+    setNoteTags(tags);
+    setNoteContent(content);
+  }, []);
+
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
+    setNoteTitle(event.target.value);
   };
 
   const handleTagInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,44 +36,44 @@ const Create = () => {
   };
 
   const handleAddTag = () => {
-    setTags([...tags, tagInput]);
+    setNoteTags([...noteTags, tagInput]);
     setTagInput('');
   };
 
   const handleAddContent = () => {
-    setContent([...content, { contentInput, checked: false }]);
+    setNoteContent([...noteContent, { contentInput, checked: false }]);
     setContentInput('');
   };
 
   const handleRemoveTag = (index: number) => {
-    const newTags = [...tags];
+    const newTags = [...noteTags];
     newTags.splice(index, 1);
-    setTags(newTags);
+    setNoteTags(newTags);
   };
 
   const handleRemoveContent = (index: number) => {
-    const newContents = [...content];
+    const newContents = [...noteContent];
     newContents.splice(index, 1);
-    setContent(newContents);
+    setNoteContent(newContents);
   };
 
   const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const note = {
-      id: Date.now(),
-      title,
-      content,
-      tags,
+    const updatedNote = {
+      id,
+      title: noteTitle,
+      content: noteContent,
+      tags: noteTags,
     };
 
     if (
-      tags.length &&
-      tags.every((s) => s !== '') &&
-      content.length &&
-      content.some((s) => s.contentInput !== '') &&
-      title.length
+      noteTags.length &&
+      noteTags.every((s) => s !== '') &&
+      noteContent.length &&
+      noteContent.some((s) => s.contentInput !== '') &&
+      noteTitle.length
     ) {
-      dispatch(addNote(note));
+      dispatch(updateNote(updatedNote));
       navigate('/');
     } else {
       setDisabled(true);
@@ -77,15 +84,14 @@ const Create = () => {
     <>
       <br />
       <br />
-      <h3>Создание заметки: </h3>
+      <h3>Редактирование заметки:</h3>
       <br />
-      <div className="d-flex" style={{ gap: '1.5rem' }}>
-        <div style={{ flex: '1 1 50%' }}>
+      <div className="d-flex" style={{ gap: '1.5rem', flexWrap: 'wrap' }}>
+        <div style={{ flex: '49%' }}>
           <div className="d-flex" style={{ gap: '10px', flexWrap: 'wrap' }}>
-            {tags &&
-              tags.map((tag, index) => (
+            {noteTags &&
+              noteTags.map((tag, index) => (
                 <Form.Group controlId={`tag${index}`} key={index}>
-                  {/* <Form.Label>Тег {index + 1}</Form.Label> */}
                   <div className="d-flex" style={{ gap: '5px' }}>
                     <Badge bg="secondary">{tag}</Badge>
                     <CloseButton onClick={() => handleRemoveTag(index)} />
@@ -99,7 +105,7 @@ const Create = () => {
           <Form onSubmit={handleFormSubmit}>
             <Form.Group controlId="noteTitle">
               <Form.Label>Название заметки</Form.Label>
-              <Form.Control type="text" value={title} onChange={handleTitleChange} />
+              <Form.Control type="text" value={noteTitle} onChange={handleTitleChange} />
             </Form.Group>
             <br />
 
@@ -132,13 +138,13 @@ const Create = () => {
             </Form.Group>
             <br />
 
-            <Button variant="primary" type="submit">
-              Создать заметку
+            <Button variant="secondary" type="submit">
+              Сохранить изменения
             </Button>
           </Form>
         </div>
 
-        <div style={{ flex: '1 1 50%' }}>
+        <div style={{ flex: '49%' }}>
           {content &&
             content.map((content, index) => (
               <Form.Group controlId={`content${index}`} key={index}>
@@ -157,4 +163,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default EditNote;

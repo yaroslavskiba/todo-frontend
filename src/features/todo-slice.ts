@@ -1,23 +1,29 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+type content = {
+  contentInput: string;
+  checked: boolean;
+};
+
 export interface Note {
   id: number;
   title: string;
-  content: string[];
+  content: content[];
   tags: string[];
-  checked: boolean;
 }
 
 interface NotesState {
   notes: Note[];
   filteredNotes: Note[];
   tags: string[];
+  currentNote: Note | null;
 }
 
 const initialState: NotesState = {
   notes: [],
   filteredNotes: [],
   tags: [],
+  currentNote: null,
 };
 
 const notesSlice = createSlice({
@@ -50,12 +56,20 @@ const notesSlice = createSlice({
     },
     setChecked: (state, action: PayloadAction<number>) => {
       const index = state.notes.findIndex((note) => note.id === action.payload);
-      state.notes[index].checked = !state.notes[index].checked;
-      state.filteredNotes[index].checked = !state.filteredNotes[index].checked;
+      state.notes[index].content.forEach((item) => {
+        item.checked = !item.checked;
+      });
+      state.filteredNotes[index].content.forEach((item) => {
+        item.checked = !item.checked;
+      });
+    },
+    editCurrentElement: (state, action: PayloadAction<Note>) => {
+      state.currentNote = action.payload;
     },
   },
 });
 
-export const { addNote, removeNote, updateNote, setFilterTag, setChecked, clearFilter } = notesSlice.actions;
+export const { addNote, removeNote, updateNote, setFilterTag, setChecked, clearFilter, editCurrentElement } =
+  notesSlice.actions;
 
 export default notesSlice.reducer;

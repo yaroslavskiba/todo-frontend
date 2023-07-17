@@ -85,7 +85,6 @@ const Create = () => {
             {tags &&
               tags.map((tag, index) => (
                 <Form.Group controlId={`tag${index}`} key={index}>
-                  {/* <Form.Label>Тег {index + 1}</Form.Label> */}
                   <div className="d-flex" style={{ gap: '5px' }}>
                     <Badge bg="secondary">{tag}</Badge>
                     <CloseButton onClick={() => handleRemoveTag(index)} />
@@ -107,12 +106,7 @@ const Create = () => {
             <Form.Group controlId="contentInput">
               <Form.Label>Добавить TODO</Form.Label>
               <div className="d-flex">
-                <Form.Control
-                  style={{ width: '60%' }}
-                  type="text"
-                  value={contentInput}
-                  onChange={handleContentInputChange}
-                />
+                <Form.Control type="text" value={contentInput} onChange={handleContentInputChange} />
                 <Button variant="secondary" onClick={handleAddContent}>
                   Добавить TODO
                 </Button>
@@ -124,7 +118,7 @@ const Create = () => {
             <Form.Group controlId="tagInput">
               <Form.Label>Добавить тег</Form.Label>
               <div className="d-flex">
-                <Form.Control style={{ width: '50%' }} type="text" value={tagInput} onChange={handleTagInputChange} />
+                <Form.Control type="text" value={tagInput} onChange={handleTagInputChange} />
                 <Button variant="secondary" onClick={handleAddTag}>
                   Добавить тег
                 </Button>

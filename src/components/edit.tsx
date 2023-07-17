@@ -113,12 +113,7 @@ const EditNote = ({ id, title, content, tags }: Note) => {
             <Form.Group controlId="contentInput">
               <Form.Label>Добавить TODO</Form.Label>
               <div className="d-flex">
-                <Form.Control
-                  style={{ width: '60%' }}
-                  type="text"
-                  value={contentInput}
-                  onChange={handleContentInputChange}
-                />
+                <Form.Control type="text" value={contentInput} onChange={handleContentInputChange} />
                 <Button variant="secondary" onClick={handleAddContent}>
                   Добавить TODO
                 </Button>
@@ -130,7 +125,7 @@ const EditNote = ({ id, title, content, tags }: Note) => {
             <Form.Group controlId="tagInput">
               <Form.Label>Добавить тег</Form.Label>
               <div className="d-flex">
-                <Form.Control style={{ width: '50%' }} type="text" value={tagInput} onChange={handleTagInputChange} />
+                <Form.Control type="text" value={tagInput} onChange={handleTagInputChange} />
                 <Button variant="secondary" onClick={handleAddTag}>
                   Добавить тег
                 </Button>

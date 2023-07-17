@@ -79,8 +79,8 @@ const Create = () => {
       <br />
       <h3>Создание заметки: </h3>
       <br />
-      <div className="d-flex" style={{ gap: '1.5rem' }}>
-        <div style={{ flex: '1 1 50%' }}>
+      <div className="d-flex" style={{ gap: '1.5rem', flexWrap: 'wrap' }}>
+        <div style={{ flex: '1 1 49%' }}>
           <div className="d-flex" style={{ gap: '10px', flexWrap: 'wrap' }}>
             {tags &&
               tags.map((tag, index) => (
@@ -132,7 +132,7 @@ const Create = () => {
           </Form>
         </div>
 
-        <div style={{ flex: '1 1 50%' }}>
+        <div style={{ flex: '1 1 49%' }}>
           {content &&
             content.map((content, index) => (
               <Form.Group controlId={`content${index}`} key={index}>

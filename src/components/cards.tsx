@@ -1,9 +1,10 @@
 import React from 'react';
 import { RootState } from '../app/store';
-import { Badge, Card, Form, InputGroup, ListGroup } from 'react-bootstrap';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
-import { Note, editCurrentElement } from '../features/todo-slice';
+import { Note, editCurrentElement, removeNote, setChecked, setFilterTag } from '../features/todo-slice';
 import { useNavigate } from 'react-router-dom';
+import NoteCard from './note-card';
+import { Row, Col } from 'react-bootstrap';
 
 const Cards = () => {
   const notes = useAppSelector((state: RootState) => state.todoReducer.notes);
@@ -16,74 +17,46 @@ const Cards = () => {
     navigate('/edit');
   };
 
+  const handleDelete = (id: number) => {
+    dispatch(removeNote(id));
+  };
+
+  const handleFilterTag = (tag: string) => {
+    dispatch(setFilterTag(tag));
+  };
+
+  const handleChecked = (noteIndex: number, contentIndex: number) => {
+    dispatch(setChecked({ noteIndex, contentIndex }));
+  };
+
   return (
-    <div className="d-flex" style={{ gap: '1.3rem', flexWrap: 'wrap' }}>
+    <Row className="g-4" style={{ columnCount: 3, columnGap: '1rem' }}>
       {filteredNotes.length
-        ? filteredNotes.map((note) => (
-            <Card style={{ width: '18rem', minWidth: '18rem' }} key={note.id}>
-              <Card.Body>
-                <Card.Title>{note.title}</Card.Title>
-                <div className="d-flex" style={{ gap: '0.4rem' }}>
-                  {note.tags.map((tag) => (
-                    <Badge bg="secondary" key={tag}>
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </Card.Body>
-
-              <ListGroup className="list-group-flush">
-                {note.content.map((todo, index) => (
-                  <ListGroup.Item key={`${todo}${index}`}>
-                    <InputGroup className="mb-3">
-                      <InputGroup.Checkbox aria-label={todo.contentInput} />
-                      <Form.Control aria-label={todo.contentInput} value={todo.contentInput} />
-                    </InputGroup>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-
-              <Card.Body>
-                <Card.Link href="#">Удалить</Card.Link>
-                <Card.Link href="#" onClick={() => handleEdit(note)}>
-                  Редактировать
-                </Card.Link>
-              </Card.Body>
-            </Card>
+        ? filteredNotes.map((note, noteIndex) => (
+            <Col key={note.id}>
+              <NoteCard
+                note={note}
+                onChecked={handleChecked}
+                onEdit={handleEdit}
+                onFilterTag={handleFilterTag}
+                noteIndex={noteIndex}
+                handleDelete={handleDelete}
+              />
+            </Col>
           ))
-        : notes.map((note) => (
-            <Card style={{ width: '18rem', minWidth: '18rem' }} key={note.id}>
-              <Card.Body>
-                <Card.Title>{note.title}</Card.Title>
-                <div className="d-flex" style={{ gap: '0.4rem' }}>
-                  {note.tags.map((tag) => (
-                    <Badge bg="secondary" key={tag}>
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </Card.Body>
-
-              <ListGroup className="list-group-flush">
-                {note.content.map((todo, index) => (
-                  <ListGroup.Item key={`${todo}${index}`}>
-                    <InputGroup className="mb-3">
-                      <InputGroup.Checkbox aria-label={todo.contentInput} />
-                      <Form.Control aria-label={todo.contentInput} value={todo.contentInput} />
-                    </InputGroup>
-                  </ListGroup.Item>
-                ))}
-              </ListGroup>
-
-              <Card.Body>
-                <Card.Link href="#">Удалить</Card.Link>
-                <Card.Link href="#" onClick={() => handleEdit(note)}>
-                  Редактировать
-                </Card.Link>
-              </Card.Body>
-            </Card>
+        : notes.map((note, noteIndex) => (
+            <Col key={note.id}>
+              <NoteCard
+                note={note}
+                onChecked={handleChecked}
+                onEdit={handleEdit}
+                onFilterTag={handleFilterTag}
+                noteIndex={noteIndex}
+                handleDelete={handleDelete}
+              />
+            </Col>
           ))}
-    </div>
+    </Row>
   );
 };
 

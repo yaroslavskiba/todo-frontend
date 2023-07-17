@@ -144,9 +144,9 @@ const EditNote = ({ id, title, content, tags }: Note) => {
           </Form>
         </div>
 
-        <div style={{ flex: '49%' }}>
-          {content &&
-            content.map((content, index) => (
+        <div style={{ flex: '1 1 49%' }}>
+          {noteContent &&
+            noteContent.map((content, index) => (
               <Form.Group controlId={`content${index}`} key={index}>
                 <div className="d-flex">
                   <Form.Control type="text" value={content.contentInput} disabled />

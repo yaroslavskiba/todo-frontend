@@ -40,8 +40,17 @@ const notesSlice = createSlice({
       state.filteredNotes = state.notes;
     },
     removeNote: (state, action: PayloadAction<number>) => {
-      state.notes = state.notes.filter((note) => note.id !== action.payload);
-      state.filteredNotes = state.filteredNotes.filter((note) => note.id !== action.payload);
+      const noteIndex = state.notes.findIndex((note) => note.id === action.payload);
+      if (noteIndex !== -1) {
+        const removedNoteTags = state.notes[noteIndex].tags;
+        state.notes.splice(noteIndex, 1);
+        state.filteredNotes = state.filteredNotes.filter((note) => note.id !== action.payload);
+        removedNoteTags.forEach((tag) => {
+          if (!state.notes.some((note) => note.tags.includes(tag))) {
+            state.tags = state.tags.filter((t) => t !== tag);
+          }
+        });
+      }
     },
     updateNote: (state, action: PayloadAction<Note>) => {
       const index = state.notes.findIndex((note) => note.id === action.payload.id);
@@ -54,14 +63,13 @@ const notesSlice = createSlice({
     clearFilter: (state) => {
       state.filteredNotes.length = 0;
     },
-    setChecked: (state, action: PayloadAction<number>) => {
-      const index = state.notes.findIndex((note) => note.id === action.payload);
-      state.notes[index].content.forEach((item) => {
-        item.checked = !item.checked;
-      });
-      state.filteredNotes[index].content.forEach((item) => {
-        item.checked = !item.checked;
-      });
+    setChecked: (state, action: PayloadAction<{ noteIndex: number; contentIndex: number }>) => {
+      const { noteIndex, contentIndex } = action.payload;
+      state.notes[noteIndex].content[contentIndex].checked = !state.notes[noteIndex].content[contentIndex].checked;
+      if (state.filteredNotes.length) {
+        state.filteredNotes[noteIndex].content[contentIndex].checked =
+          !state.filteredNotes[noteIndex].content[contentIndex].checked;
+      }
     },
     editCurrentElement: (state, action: PayloadAction<Note>) => {
       state.currentNote = action.payload;

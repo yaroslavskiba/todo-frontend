@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { Note, editCurrentElement, removeNote, setChecked, setFilterTag } from '../features/todo-slice';
 import { useNavigate } from 'react-router-dom';
 import NoteCard from './note-card';
-import { Row, Col } from 'react-bootstrap';
 
 const Cards = () => {
   const notes = useAppSelector((state: RootState) => state.todoReducer.notes);
@@ -30,10 +29,10 @@ const Cards = () => {
   };
 
   return (
-    <Row className="g-4" style={{ columnCount: 3, columnGap: '1rem' }}>
+    <div className="d-flex" style={{ gap: '1.3rem', flexWrap: 'wrap' }}>
       {filteredNotes.length
         ? filteredNotes.map((note, noteIndex) => (
-            <Col key={note.id}>
+            <div key={note.id}>
               <NoteCard
                 note={note}
                 onChecked={handleChecked}
@@ -42,10 +41,10 @@ const Cards = () => {
                 noteIndex={noteIndex}
                 handleDelete={handleDelete}
               />
-            </Col>
+            </div>
           ))
         : notes.map((note, noteIndex) => (
-            <Col key={note.id}>
+            <div key={note.id}>
               <NoteCard
                 note={note}
                 onChecked={handleChecked}
@@ -54,9 +53,9 @@ const Cards = () => {
                 noteIndex={noteIndex}
                 handleDelete={handleDelete}
               />
-            </Col>
+            </div>
           ))}
-    </Row>
+    </div>
   );
 };
 

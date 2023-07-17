@@ -21,7 +21,7 @@ const EditNote = ({ id, title, content, tags }: Note) => {
     setNoteTitle(title);
     setNoteTags(tags);
     setNoteContent(content);
-  }, []);
+  }, [content, tags, title]);
 
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNoteTitle(event.target.value);
